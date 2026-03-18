@@ -53,8 +53,15 @@ class HexTacToeGame {
         
         // Start button
         const startBtn = document.getElementById('startBtn');
+        console.log('[DEBUG] Setting up event listeners, startBtn:', startBtn);
         if (startBtn) {
-            startBtn.addEventListener('click', () => this.startGame());
+            startBtn.addEventListener('click', () => {
+                console.log('[DEBUG] Start button clicked!');
+                this.startGame();
+            });
+            console.log('[DEBUG] Start button listener attached');
+        } else {
+            console.log('[DEBUG] WARNING: Start button not found');
         }
     }
 
@@ -105,6 +112,8 @@ class HexTacToeGame {
         }
 
         // Determine current player
+        console.log('[DEBUG] displayGameInfo - status:', this.gameData.status);
+        
         if (this.gameData.status === 'WAITING_FOR_PLAYER') {
             this.showStatus('Waiting for second player to join...', 'info');
             this.gameActive = false;
@@ -119,6 +128,7 @@ class HexTacToeGame {
             this.updateTurnDisplay();
             this.startTurnTimer();
             this.hideStartButton();
+            console.log('[DEBUG] Game is IN_PROGRESS, gameActive set to true');
         } else if (this.gameData.status === 'FINISHED') {
             this.gameActive = false;
             this.hideStartButton();
@@ -443,8 +453,12 @@ class HexTacToeGame {
      */
     showStartButton() {
         const container = document.getElementById('startButtonContainer');
+        console.log('[DEBUG] showStartButton called, container:', container);
         if (container) {
             container.classList.remove('hidden');
+            console.log('[DEBUG] Start button shown, hidden class removed');
+        } else {
+            console.log('[DEBUG] WARNING: startButtonContainer not found');
         }
     }
 
@@ -453,6 +467,7 @@ class HexTacToeGame {
      */
     hideStartButton() {
         const container = document.getElementById('startButtonContainer');
+        console.log('[DEBUG] hideStartButton called');
         if (container) {
             container.classList.add('hidden');
         }
@@ -462,12 +477,20 @@ class HexTacToeGame {
      * Start the game
      */
     startGame() {
+        console.log('[DEBUG] Start game clicked');
         this.gameData.status = 'IN_PROGRESS';
         this.gameData.currentTurnId = 0; // Blue player starts
-        localStorage.setItem(`game_${this.gameCode}`, JSON.stringify(this.gameData));
         
+        // Save to localStorage
+        localStorage.setItem(`game_${this.gameCode}`, JSON.stringify(this.gameData));
+        console.log('[DEBUG] Game started, status:', this.gameData.status);
+        
+        // Update UI immediately
         this.displayGameInfo();
         this.render();
+        
+        // Provide feedback to user
+        this.showStatus('Game has started!', 'success');
     }
 
     /**
@@ -477,24 +500,23 @@ class HexTacToeGame {
         setInterval(() => {
             if (!this.gameCode) return;
 
-            // Check for updates to game data
+            // Check for updates to game data  
             const gameDataStr = localStorage.getItem(`game_${this.gameCode}`);
             if (gameDataStr) {
                 const updatedData = JSON.parse(gameDataStr);
                 
-                // If game status changed
-                if (updatedData.status !== this.gameData.status) {
+                // Always update the full game data to ensure sync
+                const dataChanged = JSON.stringify(updatedData) !== JSON.stringify(this.gameData);
+                
+                if (dataChanged) {
+                    console.log('[DEBUG] Game data updated, old status:', this.gameData.status, 'new status:', updatedData.status);
                     this.gameData = updatedData;
+                    this.board = updatedData.board || [];
                     this.displayGameInfo();
-                }
-
-                // If board changed
-                if (JSON.stringify(updatedData.board) !== JSON.stringify(this.board)) {
-                    this.board = updatedData.board;
                     this.render();
                 }
             }
-        }, 1000);
+        }, 500);
     }
 }
 
