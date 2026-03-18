@@ -2,42 +2,62 @@
 
 ## 🔳 Game Core
 
-* [ ] Implement hex grid layout
-* [ ] Implement Blue player (circle) first move
-* [ ] Implement Red player (cross) first two moves
-* [ ] Implement alternating turns with 2 hexes per turn
-* [ ] Implement win condition: 6 in a row
+* [x] Implement hex grid layout
+* [x] Implement Blue player (circle) first move
+* [x] Implement Red player (cross) first two moves
+* [x] Implement alternating turns with 2 hexes per turn
+* [x] Implement win condition: 6 in a row
 
 ## 🌐 Website - Home Page
 
-* [ ] Create home page layout
-* [ ] Username input field
-* [ ] Game code input field
-* [ ] Create new game if game code does not exist
-* [ ] Join existing game if game code exists
+* [x] Create home page layout
+* [x] Username input field
+* [x] Game code input field
+* [x] Create new game if game code does not exist
+* [x] Join existing game if game code exists
 * [ ] Display list of public games (optional future)
 
 ## 🌐 Website - In-Game
 
-* [ ] Game page layout with hex grid display
-* [ ] Decide who starts: p1, p2, or random
+* [x] Game page layout with hex grid display
+* [x] Decide who starts: p1, p2, or random (Blue always starts)
 * [ ] Allow host to suggest starter
 * [ ] Allow other player to agree or impose random
-* [ ] Players can forfeit at any point
-* [ ] Implement 1-minute countdown per turn
-* [ ] Restrict turn to 2 hexes (except first turn rules)
+* [x] Players can forfeit at any point
+* [x] Implement 1-minute countdown per turn
+* [x] Restrict turn to 2 hexes (except first turn rules)
 * [ ] Entering an ongoing game triggers popup:
 
   * [ ] Option to spectate
   * [ ] Option to enter another game
 * [ ] Spectators can only watch gameplay
+* [x] Game start button (when both players ready)
 
-## 📠 Backend / Data Management
+## 📠 Backend / Data Management - **BLOCKING ISSUE**
 
-* [ ] Game state management (current board, players, turns)
-* [ ] Real-time updates for both players and spectators
-* [ ] Forfeit handling
-* [ ] Turn timer logic
+* [x] Game state management (current board, players, turns)
+* [ ] Real-time updates for both players and spectators - **REQUIRES BACKEND**
+  - Current issue: localStorage doesn't sync across browsers/incognito
+  - Solution needed: WebSocket/WebRTC server or Firebase/Supabase
+* [x] Forfeit handling
+* [x] Turn timer logic
+
+## ✅ Implemented Features
+
+- Homepage with game creation/joining
+- Hexagonal grid rendering
+- Turn-based gameplay with timer
+- Win detection (6 in a row)
+- Player forfeit
+- Local game storage (same browser only)
+- Start button for ready players
+
+## 🚨 Known Limitations
+
+1. **Single Browser Only**: Games stored in localStorage don't sync across browsers or incognito mode
+2. **No Real-time Sync**: Players must refresh to see updates
+3. **No Authentication**: Anyone can claim any username
+4. **No Game Persistence**: Games lost on browser clear
 
 ## ⚡ Later Improvements
 
@@ -59,4 +79,11 @@
 * [ ] Notifications for turn start/end
 * [ ] Visual indicators for 1-minute countdown
 * [ ] Highlight winning line when game ends
-* [ ] Responsive design for desktop/mo
+* [ ] Responsive design for desktop/mobile (partially done)
+
+## 🔄 Next Priority: Backend Setup
+
+To enable cross-browser multiplayer, need to implement one of:
+1. **Node.js + Socket.io** - WebSocket-based real-time sync
+2. **Firebase/Supabase** - Serverless backend with real-time listeners
+3. **WebRTC** - Peer-to-peer communication
