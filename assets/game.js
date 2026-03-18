@@ -12,6 +12,7 @@ class HexTacToeGame {
         this.board = [];
         this.moveCount = 0;
         this.maxMovesPerTurn = 2;
+        this.globalTurnCount = 0; // Track total turns for first turn rule
         this.gameActive = false;
         this.turnTimer = null;
         this.timeRemaining = 60;
@@ -125,10 +126,25 @@ class HexTacToeGame {
         } else if (this.gameData.status === 'IN_PROGRESS') {
             this.gameActive = true;
             this.currentPlayer = this.gameData.players[this.gameData.currentTurnId];
+            
+            // Calculate current turn count from board state
+            // Turn 0: 1 move (blue plays 1)
+            // Turn 1: 2 moves (red plays 2) 
+            // Turn 2+: 2 moves each
+            const totalMovesOnBoard = this.board.length;
+            if (totalMovesOnBoard === 0) {
+                this.globalTurnCount = 0;
+            } else if (totalMovesOnBoard === 1) {
+                this.globalTurnCount = 1;
+            } else {
+                // After first 3 moves (turn 0: 1, turn 1: 2), each turn has 2 moves
+                this.globalTurnCount = Math.floor((totalMovesOnBoard - 1) / 2) + 1;
+            }
+            
             this.updateTurnDisplay();
             this.startTurnTimer();
             this.hideStartButton();
-            console.log('[DEBUG] Game is IN_PROGRESS, gameActive set to true');
+            console.log('[DEBUG] Game is IN_PROGRESS, gameActive set to true, globalTurnCount:', this.globalTurnCount);
         } else if (this.gameData.status === 'FINISHED') {
             this.gameActive = false;
             this.hideStartButton();
@@ -301,7 +317,7 @@ class HexTacToeGame {
 
         // Check if this is a winning move
         if (HexUtils.isWinningMove(this.board, hex, this.currentPlayer.symbol)) {
-            this.endGame(this.currentPlayer);
+            this.endGame(this.currentPlayer, false);
             return;
         }
 
@@ -330,6 +346,14 @@ class HexTacToeGame {
     updateTurnDisplay() {
         this.currentPlayerEl.textContent = this.currentPlayer.symbol;
         this.moveCount = 0;
+        
+        // First turn (Blue's first move): only 1 hex allowed
+        if (this.globalTurnCount === 0) {
+            this.maxMovesPerTurn = 1;
+        } else {
+            this.maxMovesPerTurn = 2;
+        }
+        
         this.updateMoveCounter();
     }
 
@@ -376,6 +400,7 @@ class HexTacToeGame {
         // Switch to next player
         this.gameData.currentTurnId = 1 - this.gameData.currentTurnId;
         this.currentPlayer = this.gameData.players[this.gameData.currentTurnId];
+        this.globalTurnCount++; // Increment total turn count
         this.updateTurnDisplay();
         this.startTurnTimer();
 
@@ -395,7 +420,7 @@ class HexTacToeGame {
     /**
      * End game
      */
-    endGame(winner) {
+    endGame(winner, forfeited = false) {
         this.gameActive = false;
         clearInterval(this.turnTimer);
 
@@ -403,22 +428,25 @@ class HexTacToeGame {
         this.gameData.winner = winner.username;
         localStorage.setItem(`game_${this.gameCode}`, JSON.stringify(this.gameData));
 
-        this.showGameOver(winner);
+        this.showGameOver(winner, forfeited);
     }
 
     /**
      * Show game over modal
      */
-    showGameOver(winner = null) {
+    showGameOver(winner = null, forfeited = false) {
         if (winner && winner.username === this.username) {
             this.gameOverTitleEl.textContent = '🎉 You Won!';
-            this.gameOverMessageEl.textContent = `Congratulations, ${winner.username}! You successfully got 6 hexes in a row!`;
+            this.gameOverMessageEl.textContent = `Congratulations! You successfully got 6 hexes in a row!`;
+        } else if (winner && forfeited) {
+            this.gameOverTitleEl.textContent = 'Game Forfeited';
+            this.gameOverMessageEl.textContent = `The other player has forfeited. You win!`;
         } else if (winner) {
-            this.gameOverTitleEl.textContent = 'Game Over';
-            this.gameOverMessageEl.textContent = `${winner.username} won the game!`;
+            this.gameOverTitleEl.textContent = '😢 You Lost';
+            this.gameOverMessageEl.textContent = `${winner.username} won by getting 6 hexes in a row.`;
         } else {
             this.gameOverTitleEl.textContent = 'Game Forfeited';
-            this.gameOverMessageEl.textContent = 'The other player has forfeited.';
+            this.gameOverMessageEl.textContent = 'The other player has forfeited. You win!';
         }
 
         this.gameOverModalEl.classList.remove('hidden');
@@ -433,10 +461,11 @@ class HexTacToeGame {
             clearInterval(this.turnTimer);
 
             this.gameData.status = 'FINISHED';
-            this.gameData.winner = this.gameData.players.find(p => p.username !== this.username).username;
+            const winner = this.gameData.players.find(p => p.username !== this.username);
+            this.gameData.winner = winner.username;
             localStorage.setItem(`game_${this.gameCode}`, JSON.stringify(this.gameData));
 
-            this.showGameOver();
+            this.showGameOver(winner, true);
         }
     }
 
@@ -518,16 +547,6 @@ class HexTacToeGame {
             }
         }, 500);
     }
-}
-
-/**
- * Copy game code to clipboard
- */
-function copyGameCode() {
-    const gameCode = document.getElementById('gameCode').textContent;
-    navigator.clipboard.writeText(gameCode).then(() => {
-        alert('Game code copied to clipboard!');
-    });
 }
 
 // Initialize game on page load
