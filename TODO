@@ -1,0 +1,62 @@
+# HexTacToe TODO
+
+## 🔳 Game Core
+
+* [ ] Implement hex grid layout
+* [ ] Implement Blue player (circle) first move
+* [ ] Implement Red player (cross) first two moves
+* [ ] Implement alternating turns with 2 hexes per turn
+* [ ] Implement win condition: 6 in a row
+
+## 🌐 Website - Home Page
+
+* [ ] Create home page layout
+* [ ] Username input field
+* [ ] Game code input field
+* [ ] Create new game if game code does not exist
+* [ ] Join existing game if game code exists
+* [ ] Display list of public games (optional future)
+
+## 🌐 Website - In-Game
+
+* [ ] Game page layout with hex grid display
+* [ ] Decide who starts: p1, p2, or random
+* [ ] Allow host to suggest starter
+* [ ] Allow other player to agree or impose random
+* [ ] Players can forfeit at any point
+* [ ] Implement 1-minute countdown per turn
+* [ ] Restrict turn to 2 hexes (except first turn rules)
+* [ ] Entering an ongoing game triggers popup:
+
+  * [ ] Option to spectate
+  * [ ] Option to enter another game
+* [ ] Spectators can only watch gameplay
+
+## 📠 Backend / Data Management
+
+* [ ] Game state management (current board, players, turns)
+* [ ] Real-time updates for both players and spectators
+* [ ] Forfeit handling
+* [ ] Turn timer logic
+
+## ⚡ Later Improvements
+
+### User Accounts & Stats
+
+* [ ] Implement account system (Google/Facebook OAuth)
+* [ ] Optionally add email+password login
+* [ ] Store username, wins, losses
+* [ ] ELO rating system
+
+### Matchmaking
+
+* [ ] Auto-queue for playing against another auto-queuer
+* [ ] Public/private room setting
+* [ ] Public rooms appear in homepage list
+
+### UI/UX Improvements
+
+* [ ] Notifications for turn start/end
+* [ ] Visual indicators for 1-minute countdown
+* [ ] Highlight winning line when game ends
+* [ ] Responsive design for desktop/mo
