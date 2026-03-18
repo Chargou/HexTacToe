@@ -50,6 +50,12 @@ class HexTacToeGame {
     setupEventListeners() {
         this.forfeitBtn.addEventListener('click', () => this.forfeitGame());
         this.canvas.addEventListener('click', (e) => this.handleCanvasClick(e));
+        
+        // Start button
+        const startBtn = document.getElementById('startBtn');
+        if (startBtn) {
+            startBtn.addEventListener('click', () => this.startGame());
+        }
     }
 
     /**
@@ -102,16 +108,20 @@ class HexTacToeGame {
         if (this.gameData.status === 'WAITING_FOR_PLAYER') {
             this.showStatus('Waiting for second player to join...', 'info');
             this.gameActive = false;
+            this.hideStartButton();
         } else if (this.gameData.status === 'WAITING_FOR_START') {
-            this.showStatus('Game ready! Waiting to start...', 'info');
+            this.showStatus('Game ready! Both players are here. Click "Start Game" to begin!', 'success');
             this.gameActive = false;
+            this.showStartButton();
         } else if (this.gameData.status === 'IN_PROGRESS') {
             this.gameActive = true;
             this.currentPlayer = this.gameData.players[this.gameData.currentTurnId];
             this.updateTurnDisplay();
             this.startTurnTimer();
+            this.hideStartButton();
         } else if (this.gameData.status === 'FINISHED') {
             this.gameActive = false;
+            this.hideStartButton();
             this.showGameOver();
         }
     }
@@ -426,6 +436,38 @@ class HexTacToeGame {
     showStatus(message, type = 'info') {
         this.gameStatusEl.textContent = message;
         this.statusBoxEl.className = `status-box ${type}`;
+    }
+
+    /**
+     * Show start button
+     */
+    showStartButton() {
+        const container = document.getElementById('startButtonContainer');
+        if (container) {
+            container.classList.remove('hidden');
+        }
+    }
+
+    /**
+     * Hide start button
+     */
+    hideStartButton() {
+        const container = document.getElementById('startButtonContainer');
+        if (container) {
+            container.classList.add('hidden');
+        }
+    }
+
+    /**
+     * Start the game
+     */
+    startGame() {
+        this.gameData.status = 'IN_PROGRESS';
+        this.gameData.currentTurnId = 0; // Blue player starts
+        localStorage.setItem(`game_${this.gameCode}`, JSON.stringify(this.gameData));
+        
+        this.displayGameInfo();
+        this.render();
     }
 
     /**
