@@ -1,0 +1,37 @@
+# HexTacToe GitHub Pages Configuration
+
+title: HexTacToe
+description: TicTacToe on a Hexagonal Grid - Play Online!
+author: Chargou
+
+# Build settings
+theme: null
+plugins: []
+
+# GitHub Pages specific
+markdown: kramdown
+kramdown:
+  syntax_highlighter: rouge
+
+# Exclude files from Jekyll build
+exclude:
+  - .gitignore
+  - .git
+  - .github
+  - node_modules
+  - Gemfile
+  - Gemfile.lock
+  - TODO
+
+# Site URL (uncomment when deployed)
+# url: "https://chargou.github.io/HexTacToe"
+
+# Defaults
+defaults:
+  - scope:
+      path: ""
+    values:
+      layout: default
+
+# Enable future posts/pages
+future: true

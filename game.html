@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>HexTacToe - Game</title>
+    <link rel="stylesheet" href="assets/styles.css">
+    <link rel="stylesheet" href="assets/game.css">
+</head>
+<body>
+    <div class="background-pattern"></div>
+    
+    <div class="container">
+        <header class="game-header">
+            <div class="header-left">
+                <h1><a href="/" class="home-link">← HexTacToe</a></h1>
+            </div>
+            <div class="header-center">
+                <div class="game-code" id="gameCode">LOADING...</div>
+            </div>
+            <div class="header-right">
+                <button id="forfeitBtn" class="btn btn-danger">Forfeit</button>
+            </div>
+        </header>
+
+        <main class="game-content">
+            <div class="game-container">
+                <!-- Game Board (Hex Grid) -->
+                <div class="game-board" id="gameBoard">
+                    <canvas id="hexCanvas" width="600" height="600"></canvas>
+                </div>
+
+                <!-- Game Sidebar -->
+                <aside class="game-sidebar">
+                    <!-- Player Info -->
+                    <div class="players-info">
+                        <div class="player-card blue">
+                            <div class="player-name" id="blueName">Blue Player</div>
+                            <div class="player-symbol">●</div>
+                        </div>
+                        <div class="player-card red">
+                            <div class="player-name" id="redName">Red Player</div>
+                            <div class="player-symbol">✕</div>
+                        </div>
+                    </div>
+
+                    <!-- Turn Info -->
+                    <div class="turn-info" id="turnInfo">
+                        <div class="turn-title">Current Turn</div>
+                        <div class="turn-player" id="currentPlayer">Blue</div>
+                        <div class="turn-timer" id="turnTimer">60s</div>
+                    </div>
+
+                    <!-- Move Counter -->
+                    <div class="move-info">
+                        <div class="move-title">Moves This Turn</div>
+                        <div class="move-counter" id="moveCounter">0/2</div>
+                    </div>
+
+                    <!-- Game Status -->
+                    <div class="status-box" id="statusBox">
+                        <div id="gameStatus">Waiting for second player...</div>
+                    </div>
+
+                    <!-- Chat (Optional) -->
+                    <div class="chat-box">
+                        <div class="chat-header">Game Chat</div>
+                        <div class="chat-messages" id="chatMessages">
+                            <p class="system-message">Game started!</p>
+                        </div>
+                        <!-- Chat input can be added later -->
+                    </div>
+                </aside>
+            </div>
+        </main>
+
+        <footer class="footer">
+            <p>&copy; 2026 HexTacToe. <a href="https://github.com/Chargou/HexTacToe" target="_blank">View on GitHub</a></p>
+        </footer>
+    </div>
+
+    <!-- Modal for game over -->
+    <div id="gameOverModal" class="modal hidden">
+        <div class="modal-content">
+            <h2 id="gameOverTitle">Game Over!</h2>
+            <p id="gameOverMessage"></p>
+            <div class="modal-buttons">
+                <button class="btn btn-primary" onclick="location.href='/'">Play Again</button>
+                <button class="btn btn-secondary" onclick="copyGameCode()">Copy Game Code</button>
+            </div>
+        </div>
+    </div>
+
+    <script src="assets/hex-utils.js"></script>
+    <script src="assets/game.js"></script>
+</body>
+</html>
