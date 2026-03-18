@@ -127,7 +127,7 @@ class GameManager {
             
             // Redirect to game page after short delay
             setTimeout(() => {
-                window.location.href = `game.html?code=${gameCode}&username=${encodeURIComponent(username)}`;
+                window.location.href = `/HexTacToe/game.html?code=${gameCode}&username=${encodeURIComponent(username)}`;
             }, 1000);
 
         } catch (error) {
@@ -179,7 +179,7 @@ class GameManager {
 
             // Redirect to game page after short delay
             setTimeout(() => {
-                window.location.href = `game.html?code=${gameCode}&username=${encodeURIComponent(username)}`;
+                window.location.href = `/HexTacToe/game.html?code=${gameCode}&username=${encodeURIComponent(username)}`;
             }, 1000);
 
         } catch (error) {
